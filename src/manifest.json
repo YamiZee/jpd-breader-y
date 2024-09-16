@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "JPDBreader",
-    "version": "13.0",
+    "version": "13.1",
     "description": "JPDB parsing and mining in your browser",
     "icons": {
         "16": "icons/logo_16.png",
@@ -42,7 +42,7 @@
             "css": ["content/word.css"]
         },
         {
-            "matches": ["file:///*mokuro*.html"],
+            "matches": ["file:///*mokuro*.html", "*://reader.mokuro.app/*"],
             "js": ["integrations/mokuro.js"],
             "css": ["content/word.css"]
         },
@@ -105,6 +105,7 @@
         "*://ja.m.wikipedia.org/*",
         "*://app.readwok.com/*",
         "*://*.youtube.com/*",
-        "*://bunpro.jp/*"
+        "*://bunpro.jp/*",
+	"*://reader.mokuro.app/*"
     ]
 }
