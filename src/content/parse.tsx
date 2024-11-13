@@ -1,4 +1,4 @@
-import { Token } from '../types.js';
+import { Card, Token } from '../types.js';
 import { nonNull } from '../util.js';
 import { jsxCreateElement } from '../jsx.js';
 import { onWordHoverStart, onWordHoverStop } from './content.js';
@@ -18,6 +18,13 @@ export type Fragment = {
  * in the source html corresponds to their own Paragraph.
  */
 export type Paragraph = Fragment[];
+
+export type VidSidPair = {
+  vocab: string;
+  vid: number;
+  sid: number;
+  node: Text;
+};
 
 export function displayCategory(node: Node): 'text' | 'ruby' | 'ruby-text' | 'inline' | 'block' | 'none' {
   if (node instanceof Text || node instanceof CDATASection) {
@@ -102,7 +109,7 @@ function wrap(node: Node, wrapper: HTMLElement) {
 
 export const reverseIndex = new Map<string, { className: string; elements: JpdbWord[] }>();
 export function applyTokens(fragments: Paragraph, tokens: Token[]) {
-  console.log('Applying results:', fragments, tokens);
+  console.log('Applying REAL results:', fragments, tokens);
 
   let fragmentIndex = 0;
   let curOffset = 0;
@@ -194,4 +201,36 @@ export function applyTokens(fragments: Paragraph, tokens: Token[]) {
     // console.log('Unparsed original:', fragment.node.data);
     wrap(fragment.node, <span class='jpdb-word unparsed'></span>);
   }
+}
+
+export function applyCardToJPDBVocab(vidSidPair: VidSidPair, card: Card) {
+  const text = vidSidPair.vocab;
+
+  if (!text) return;
+
+  const className = `jpdb-word ${card.state.join(' ')}`;
+  const wrapper = (
+    <span class={className} onmouseenter={onWordHoverStart} onmouseleave={onWordHoverStop}></span>
+  ) as JpdbWord;
+
+  const idx = reverseIndex.get(`${card.vid}/${card.sid}`);
+  if (idx === undefined) {
+    reverseIndex.set(`${card.vid}/${card.sid}`, { className, elements: [wrapper] });
+  } else {
+    idx.elements.push(wrapper);
+  }
+
+  const length = vidSidPair.vocab.length;
+  wrapper.jpdbData = {
+    token: { start: 0, end: length - 1, rubies: [], length: length, card: card },
+    context: text,
+    contextOffset: 0,
+  };
+
+  // Wrap ruby nodes
+  const childrenToWrap: ChildNode[] = [...vidSidPair.node.childNodes];
+
+  childrenToWrap.forEach(child => {
+    wrap(child, wrapper);
+  });
 }

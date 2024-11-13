@@ -1,3 +1,31 @@
+# Version ＋α 1.5
+
+I'm hoping there's nothing else major I need to change before I release the video about this (but also I hope there's nothing major I need to fix AFTER I release it lol)
+
+- Move links on parsed text into the popup and turn it on by default (I may change this to being off by default but for now I like it on at the start)
+- Add link to learn page when on the last page of 2D reviews
+- Add progress bar to top of review & learn screens
+- Add options to prioritize popup to show on top or to the right of the word (for easier reviewing & reading)
+- Add Mokuro support for mokuro.moe
+- Clean up like a million little bugs and visual oddities
+
+# Version ＋α 1.4
+
+This will hopefully be the final version before the "release" - still in the branch but will be merged someday lol
+
+- Pull JPDB words from the lookup-vocabulary endpoint using word IDs so there should be no more mis-parses on jpdb.io pages!
+  - Still needs major cleanup and debugging, the popup window is way off where it should be like 40% of the time
+
+# Version ＋α 1.3
+
+Some more small improvements (basically me just procrastinating before I have to change the last big thing before "release" lol)
+
+- Add links to learn new word pages in the JPDB home and learn pages! Click those to be taken to an auto-parsed page of your all-word/global deck ordered by frequency across the whole corpus
+- Add ability to switch the JPDB buttons to be on the bottom of the popup (defaulted to this but may switch if people don't like it
+- Add ability to have successfully-graded words hide in 2D reviews! not sure I'd use this myself but it's really satisfying
+- Add new settings related to new functionality
+- Add progress message to 2D reviews (done_count / remaining_count)
+
 # Version ＋α 1.2
 
 Small fix that improves the QOL of mobile reviewing 10x

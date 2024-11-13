@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "JPDBreader＋α",
-  "version": "1.2",
+  "version": "1.5",
   "description": "JPDB parsing and mining in your browser",
   "icons": {
     "16": "icons/logo_16.png",
@@ -35,8 +35,16 @@
       "js": ["jpdb_plus_alpha/learn_page_additions.js"]
     },
     {
+      "matches": ["*://jpdb.io/vocabulary/*"],
+      "js": ["jpdb_plus_alpha/vocab_page_additions.js"]
+    },
+    {
+      "matches": ["*://jpdb.io/search?*"],
+      "js": ["jpdb_plus_alpha/search_page_additions.js"]
+    },
+    {
       "matches": ["*://jpdb.io/deck?id=global*"],
-      "js": ["integrations/jpdb_global_deck.js"],
+      "js": ["content/progressbar.js", "content/jpdb_global_deck.js"],
       "css": ["content/jpdb_global_deck.css"]
     },
     {
@@ -60,7 +68,7 @@
       "css": ["content/word.css"]
     },
     {
-      "matches": ["file:///*mokuro*.html"],
+      "matches": ["file:///*mokuro*.html", "*://*.mokuro.moe/manga/*.html"],
       "js": ["integrations/mokuro.js"],
       "css": ["content/word.css"]
     },
@@ -92,6 +100,7 @@
   "web_accessible_resources": [
     "integrations/common.js",
     "content/background_comms.js",
+    "content/progressbar.js",
     "content/content.js",
     "content/dialog.js",
     "content/dialog.css",
@@ -108,6 +117,7 @@
     "themes.css"
   ],
   "permissions": [
+    "storage",
     "tabs",
     "activeTab",
     "contextMenus",
@@ -119,6 +129,7 @@
     "*://kamwithk.github.io/exSTATic/tracker.html",
     "*://renji-xd.github.io/texthooker-ui/",
     "file:///*mokuro*.html",
+    "*://*.mokuro.moe/*",
     "*://ja.wikipedia.org/*",
     "*://ja.m.wikipedia.org/*",
     "*://app.readwok.com/*",

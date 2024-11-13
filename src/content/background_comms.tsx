@@ -2,14 +2,35 @@ import { BackgroundToContentMessage, ContentToBackgroundMessage, ResponseTypeMap
 import { Card, Grade, Token } from '../types.js';
 import { Config } from '../background/config.js';
 import { browser, Canceled, isChrome, PromiseHandle } from '../util.js';
-import { Paragraph, reverseIndex } from './parse.js';
+import { Paragraph, reverseIndex, VidSidPair } from './parse.js';
 import { Popup } from './popup.js';
 import { showError } from './toast.js';
 
 // Background script communication
 
 export let config: Config;
-export const callOnConfigLoad: ((config: any) => void)[] = [];
+const callOnConfigLoad: ((config: any) => void)[] = [];
+
+let reviewsDone = 0;
+const callOnReviewDone: ((reviewsCount: number) => void)[] = [];
+
+export const runFunctionWhenConfigLoaded = (func: (config: any) => void) => {
+  // If config is already created, run immediately, otherwise register as callback
+  if (config) {
+    func(config);
+  } else {
+    callOnConfigLoad.push(func);
+  }
+};
+
+export const runFunctionWhenReviewDone = (func: (reviewCount: number) => void) => {
+  callOnReviewDone.push(func);
+};
+
+export const incrementReviewsDone = () => {
+  reviewsDone++;
+  callOnReviewDone.map(func => func(reviewsDone));
+};
 
 const waitingPromises = new Map<number, PromiseHandle<unknown>>();
 let nextSeq = 0;
@@ -52,6 +73,9 @@ export function requestMine(card: Card, forq: boolean, sentence?: string, transl
 }
 
 export function requestReview(card: Card, rating: Grade) {
+  if (['hard', 'good', 'easy'].includes(rating)) {
+    incrementReviewsDone();
+  }
   return requestUnabortable({ type: 'review', rating, vid: card.vid, sid: card.sid });
 }
 
@@ -67,15 +91,37 @@ export type ParseBatch = {
   seq: number;
 };
 
+// A ParseBatch represents a full set of vocab words in a JPDB page
+export type ParseVidSidBatch = {
+  vidSidPair: VidSidPair;
+  promise: Promise<Card>;
+  abort: AbortController;
+  seq: number;
+};
+
 export function createParseBatch(paragraph: Paragraph): ParseBatch {
   const [seq, promise, abort] = preregisterAbortableRequest<Token[]>();
   return { paragraph, promise, abort, seq };
 }
 
+export function createJPDBVocabParseBatch(vidSidPair: VidSidPair): ParseVidSidBatch {
+  const [seq, promise, abort] = preregisterAbortableRequest<Card>();
+  return { vidSidPair, promise, abort, seq };
+}
+
 // Takes multiple ParseBatches to save on communications overhead between content script and background page
 export function requestParse(batches: ParseBatch[]) {
   const texts = batches.map(batch => [batch.seq, batch.paragraph.map(fragment => fragment.node.data).join('')]);
+  // console.log('OTHER TEXTS THING BELOW');
+  // console.log(texts);
+
   return requestUnabortable({ type: 'parse', texts });
+}
+
+export function requestJpdbVocabParse(batches: ParseVidSidBatch[]) {
+  const texts = batches.map(batch => [batch.seq, batch.vidSidPair]);
+  // console.log(texts);
+  return requestUnabortable({ type: 'parseJpdbPage', texts });
 }
 
 // Chrome can't send Error objects over background ports, so we have to serialize and deserialize them...
@@ -134,7 +180,10 @@ port.onMessage.addListener((message: BackgroundToContentMessage) => {
     case 'updateConfig':
       {
         config = message.config;
-        callOnConfigLoad.forEach(func => func(config));
+
+        callOnConfigLoad.forEach(func => {
+          func(config);
+        });
         Popup.get().updateStyle();
       }
       break;
@@ -150,7 +199,11 @@ port.onMessage.addListener((message: BackgroundToContentMessage) => {
 
           for (const element of idx.elements) {
             element.className = className;
-            element.jpdbData.token.card.state = state;
+            if (element.jpdbData.token) {
+              element.jpdbData.token.card.state = state;
+            } else {
+              console.log('TOKEN IS NULL SO STATE GETS DROPPED ', state);
+            }
           }
 
           idx.className = className;

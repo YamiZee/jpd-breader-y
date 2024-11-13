@@ -1,5 +1,18 @@
-import { createParseBatch, ParseBatch, requestParse } from '../content/background_comms.js';
-import { applyTokens, displayCategory, Fragment, Paragraph } from '../content/parse.js';
+import {
+  createJPDBVocabParseBatch,
+  createParseBatch,
+  ParseBatch,
+  ParseVidSidBatch,
+  requestParse,
+} from '../content/background_comms.js';
+import {
+  applyTokens,
+  applyCardToJPDBVocab,
+  displayCategory,
+  Fragment,
+  Paragraph,
+  VidSidPair,
+} from '../content/parse.js';
 import { showError } from '../content/toast.js';
 import { Canceled } from '../util.js';
 
@@ -70,6 +83,17 @@ export function paragraphsInNode(node: Node, filter: (node: Node) => boolean = (
   recurse(node, false);
   return paragraphs;
 }
+
+export const vidSidPairsInNode = (node: Element): VidSidPair[] => {
+  const vidSidPairs = [...node.children].map(node => {
+    const vid = node.querySelector('input[name=v]')?.getAttribute('value');
+    const sid = node.querySelector('input[name=s]')?.getAttribute('value');
+    const vocab = [...node.querySelectorAll<HTMLElement>('ruby')].map(ruby => ruby.innerText.trim()).join('');
+    return { vocab: vocab ?? '', vid: Number(vid), sid: Number(sid), node: node.querySelector('a') as Node as Text };
+  });
+
+  return vidSidPairs;
+};
 
 export function visibleObserver(
   enterCallback: (elements: HTMLElement[]) => void,
@@ -168,10 +192,7 @@ export function parseVisibleObserver(filter: (node: Node) => boolean = () => tru
 }
 
 export function parseParagraphs(paragraphs: Paragraph[]): [ParseBatch[], Promise<void>[]] {
-  console.log(paragraphs);
   const batches = paragraphs.map(createParseBatch);
-  console.log('BATCHES BELOW');
-  console.log(batches);
   const applied = batches.map(({ paragraph, promise }) =>
     promise
       .then(tokens => {
@@ -186,4 +207,23 @@ export function parseParagraphs(paragraphs: Paragraph[]): [ParseBatch[], Promise
   );
 
   return [batches, applied];
+}
+
+export function parseJpdbVocabulary(vidSidPairs: VidSidPair[]): [ParseVidSidBatch[], Promise<void>[]] {
+  const batches = vidSidPairs.map(createJPDBVocabParseBatch);
+  const applied = batches.map(({ vidSidPair, promise }) =>
+    promise
+      .then(card => {
+        applyCardToJPDBVocab(vidSidPair, card);
+      })
+      .catch(error => {
+        if (!(error instanceof Canceled)) {
+          showError(error);
+        }
+        throw error;
+      }),
+  );
+
+  return [batches, applied];
+  //return [0, 0];
 }

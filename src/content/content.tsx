@@ -8,6 +8,25 @@ import { getSentences, JpdbWord } from './word.js';
 export let currentHover: [JpdbWord, number, number] | null = null;
 let popupKeyHeld = false;
 
+function moveParentLinkIfExists(element: HTMLElement | undefined) {
+  if (!element || (config && !config.moveLinksToPopup)) {
+    return;
+  }
+
+  let parent = element.parentElement;
+  while (parent) {
+    if (parent.tagName.toLowerCase() === 'a' && parent.getAttribute('href')) {
+      const href = `${parent.getAttribute('href')}`;
+      parent.removeAttribute('href');
+      element.setAttribute('original-link', href);
+      return href;
+    }
+    parent = parent.parentElement;
+  }
+
+  return;
+}
+
 function matchesHotkey(event: KeyboardEvent | MouseEvent, hotkey: Keybind) {
   const code = event instanceof KeyboardEvent ? event.code : `Mouse${event.button}`;
   return hotkey && code === hotkey.code && hotkey.modifiers.every(name => event.getModifierState(name));
@@ -71,16 +90,25 @@ async function hotkeyListener(event: KeyboardEvent | MouseEvent) {
 
       if (matchesHotkey(event, config.hardKey)) {
         event.preventDefault();
+        if (config && !config.disablePopupAutoClose) {
+          Popup.get().fadeOut();
+        }
         await requestReview(card, 'hard');
       }
 
       if (matchesHotkey(event, config.goodKey)) {
         event.preventDefault();
+        if (config && !config.disablePopupAutoClose) {
+          Popup.get().fadeOut();
+        }
         await requestReview(card, 'good');
       }
 
       if (matchesHotkey(event, config.easyKey)) {
         event.preventDefault();
+        if (config && !config.disablePopupAutoClose) {
+          Popup.get().fadeOut();
+        }
         await requestReview(card, 'easy');
       }
     }
@@ -118,6 +146,9 @@ document.addEventListener('mousedown', e => {
 export function onWordHoverStart({ target, x, y }: MouseEvent) {
   if (target === null) return;
   currentHover = [target as JpdbWord, x, y];
+
+  moveParentLinkIfExists((target as HTMLElement) ?? null);
+
   if (popupKeyHeld || config.showPopupOnHover || config.touchscreenSupport) {
     // On mobile devices, the position of the popup is occasionally adjusted to ensure
     // it remains on the screen. However, due to the interaction between the 'onmouseenter'

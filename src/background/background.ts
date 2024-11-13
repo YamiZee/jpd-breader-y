@@ -1,8 +1,9 @@
 import { BackgroundToContentMessage, ContentToBackgroundMessage, ResponseTypeMap } from '../message_types.js';
-import { DeckId, Grade, Token } from '../types.js';
+import { Card, DeckId, Grade, Token } from '../types.js';
 import { loadConfig } from './config.js';
 import { browser, isChrome, PromiseHandle, sleep } from '../util.js';
 import * as backend from './backend.js';
+import { VidSidPair } from '../content/parse.js';
 
 export let config = loadConfig();
 
@@ -75,6 +76,46 @@ type PendingParagraph = PromiseHandle<Token[]> & {
 };
 const pendingParagraphs = new Map<number, PendingParagraph>();
 
+type PendingJpdbWord = PromiseHandle<Card> & {
+  vidSidPair: VidSidPair;
+  length: number;
+};
+const pendingVidSidPair = new Map<number, PendingJpdbWord>();
+
+async function batchJpdbPageParses() {
+  // Greedily take as many paragraphs as can fit
+  let length = 0;
+  const vidSidPairs: VidSidPair[] = [];
+  const handles: PromiseHandle<Card>[] = [];
+
+  for (const [seq, vidSidPair] of pendingVidSidPair) {
+    length += vidSidPair.length;
+    if (length > maxParseLength) break;
+    vidSidPairs.push(vidSidPair.vidSidPair);
+    handles.push(vidSidPair);
+    pendingVidSidPair.delete(seq);
+  }
+
+  if (vidSidPairs.length === 0) return [null, 0] as [null, number];
+  try {
+    const [cards, timeout] = await backend.parseJpdbWordsByVidSidPairs(vidSidPairs);
+
+    for (const [i, handle] of handles.entries()) {
+      handle.resolve(cards[i]); //({'vid': cards[i].vid, 'sid': cards[i].sid, 'vocab': cards[i].spelling});
+    }
+
+    broadcast({ type: 'updateWordState', words: cards.map(card => [card.vid, card.sid, card.state]) });
+
+    return [null, timeout] as [null, number];
+  } catch (error) {
+    for (const handle of handles) {
+      handle.reject(error);
+    }
+
+    throw error;
+  }
+}
+
 async function batchParses() {
   // Greedily take as many paragraphs as can fit
   let length = 0;
@@ -112,6 +153,8 @@ async function batchParses() {
 
 export function enqueueParse(seq: number, text: string): Promise<Token[]> {
   return new Promise((resolve, reject) => {
+    //console.log('OLD TEXT FOR ENCODING: ' + text);
+    //console.log(new TextEncoder().encode(text).length + 7);
     pendingParagraphs.set(seq, {
       text,
       // HACK work around the ○○ we will add later
@@ -122,8 +165,27 @@ export function enqueueParse(seq: number, text: string): Promise<Token[]> {
   });
 }
 
+export function enqueueJpdbPageParse(seq: number, vidSidPair: VidSidPair): Promise<Card> {
+  return new Promise((resolve, reject) => {
+    //console.log('NEW TEXT FOR ENCODING: ' + vidSidPair.vocab);
+    //console.log(new TextEncoder().encode(vidSidPair.vocab).length + 7);
+    pendingVidSidPair.set(seq, {
+      vidSidPair,
+      // HACK work around the ○○ we will add later
+      length: new TextEncoder().encode(vidSidPair.vocab).length + 7,
+      resolve,
+      reject,
+    });
+  });
+}
+
 export function startParse() {
   pendingAPICalls.push({ func: batchParses, resolve: () => {}, reject: () => {} });
+  apiCaller();
+}
+
+export function startJpdbPageParse() {
+  pendingAPICalls.push({ func: batchJpdbPageParses, resolve: () => {}, reject: () => {} });
   apiCaller();
 }
 
@@ -192,6 +254,15 @@ const messageHandlers: {
         .catch(error => post(port, { type: 'error', seq: seq, error: serializeError(error) }));
     }
     startParse();
+  },
+
+  async parseJpdbPage(request, port) {
+    for (const [seq, text] of request.texts) {
+      enqueueJpdbPageParse(seq, text)
+        .then(card => post(port, { type: 'success', seq: seq, result: card }))
+        .catch(error => post(port, { type: 'error', seq: seq, error: serializeError(error) }));
+    }
+    startJpdbPageParse();
   },
 
   async setFlag(request, port) {
