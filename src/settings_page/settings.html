@@ -199,10 +199,10 @@
         </section>
         <section id="plusalpha">
           <h1>＋α Settings</h1>
-          <h3 style="grid-column: 1 / span 3">2D Reviewing</h3>
+          <h3 style="grid-column: 1 / span 3">2D Reviewing/jpdb.io</h3>
           <setting-boolean class="setting" name="disableExtraSpace">Hide large blank space area</setting-boolean>
           <setting-boolean class="setting" name="disablePopupAutoClose">
-            Disable popup auto-close on successful review
+            Prevent popup auto-close on successful review
           </setting-boolean>
           <setting-boolean class="setting" name="hideProgressBar"
             >Hide progress bar on review/learn pages</setting-boolean
@@ -211,9 +211,14 @@
             >Hide words after successful review</setting-boolean
           >
           <setting-boolean class="setting" name="disable2DReviewing">Disable 2D reviewing outright</setting-boolean>
+          <setting-boolean class="setting" name="disableJPDBAutoParsing">Disable jpdb.io auto-parsing</setting-boolean>
 
           <h3 style="grid-column: 1 / span 3">Other</h3>
-          <setting-boolean class="setting" name="disableJPDBAutoParsing">Disable jpdb.io auto-parsing</setting-boolean>
+
+          <setting-boolean class="setting" name="closeOnPopupClick">Close popup on non-button/link tap</setting-boolean>
+          <setting-boolean class="setting" name="useShorterButtonNames"
+            >Use "none" and "some" instead of "nothing" and "something"</setting-boolean
+          >
           <setting-boolean class="setting" name="moveLinksToPopup">Move links on parsed text to popup</setting-boolean>
           <setting-boolean class="setting" name="gradeButtonsAtBottom"
             >Move popup add/grade buttons to bottom</setting-boolean

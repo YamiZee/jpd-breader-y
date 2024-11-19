@@ -2,7 +2,7 @@
 
 // Code for adding review button to vocab pages taken graciously from daruko's script
 // I've been using his script for a long time now and figured I'd throw it in here so it
-// might get even more use. Thank you darkuo-san
+// might get even more use. Thank you daruko-san!
 
 // START daruko's SCRIPT
 
@@ -21,6 +21,11 @@ document.querySelectorAll('.result.vocabulary').forEach(entry => {
   if (menu && s && v) {
     menu.after(createLink(href));
   }
+
+  Object.assign((menu as HTMLElement).style, {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  });
 });
 
 function createLink(href: string) {
