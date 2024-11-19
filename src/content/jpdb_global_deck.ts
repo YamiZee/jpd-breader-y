@@ -169,12 +169,32 @@ const prepareTopSection = (config: any) => {
   const progress_report = document.createElement('span');
   progress_report.innerHTML = `<span id="reviews_done">0</span> / <span id="total_reviews">${initial_total_review_count}</span>`;
 
-  const pagination_divs = [...(document.querySelectorAll<HTMLElement>('.pagination') ?? [])];
+  let pagination_divs = [...(document.querySelectorAll<HTMLElement>('.pagination') ?? [])];
+
+  if (pagination_divs.length === 0) {
+    const vocabulary_list = document.getElementsByClassName('vocabulary-list')[0];
+    const pagination_div = document.createElement('div');
+    pagination_div.classList.add('pagination');
+    vocabulary_list.insertAdjacentElement('beforebegin', pagination_div);
+
+    const pagination_div_2 = document.createElement('div');
+    pagination_div_2.classList.add('pagination');
+    vocabulary_list.insertAdjacentElement('afterend', pagination_div_2);
+
+    // Get the newly created ones
+    pagination_divs = [...(document.querySelectorAll<HTMLElement>('.pagination') ?? [])];
+  }
+
   pagination_divs.map((pagination_div: HTMLElement, index) => {
     pagination_div.classList.remove(...['without-prev', 'without-next']);
 
-    // If only a one of the links (only prev or next but not both), add blank link for styling purposes
-    if (pagination_div.children.length === 1) {
+    console.log(pagination_div.children.length);
+    if (pagination_div.children.length === 0) {
+      pagination_div.append(document.createElement('a'));
+      pagination_div.append(document.createElement('a'));
+
+      // If only a one of the links (only prev or next but not both), add blank link for styling purposes
+    } else if (pagination_div.children.length === 1) {
       if (pagination_div.firstElementChild?.innerHTML.toLowerCase().trim() === 'previous page') {
         pagination_div.appendChild(document.createElement('a'));
       } else {
@@ -201,16 +221,6 @@ const prepareTopSection = (config: any) => {
       pagination_div.insertBefore(progress_report, pagination_div.childNodes[1]);
     }
   });
-
-  if (pagination_divs.length === 0) {
-    let pagination_div = document.querySelector<HTMLElement>('.pagination');
-    const vocabulary_list = document.getElementsByClassName('vocabulary-list')[0];
-    pagination_div = document.createElement('div');
-    pagination_div.classList.add('pagination');
-    vocabulary_list.insertAdjacentElement('beforebegin', pagination_div);
-    pagination_div.style.justifyContent = 'center';
-    pagination_div.appendChild(progress_report);
-  }
 };
 
 const jpdb_global_deck_main = (config: any) => {

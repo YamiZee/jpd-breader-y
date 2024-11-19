@@ -33,6 +33,8 @@ export type Config = {
 
   disableJPDBAutoParsing: boolean;
   gradeButtonsAtBottom: boolean;
+  closeOnPopupClick: boolean;
+  useShorterButtonNames: boolean;
   moveLinksToPopup: boolean;
   prioritizePopupAboveWord: boolean;
   prioritizePopupToRightOfWord: boolean;
@@ -95,18 +97,6 @@ html.dark-mode, html.dark-mode body {
  * Remove the slash+asterisks surrounding the code parts below to enable experimental styling ideas.
  * These are all off by default! */
 
-/***** Make parsed-text colors more visible on grayscale displays (super ugly though) *****/
-/*
-.jpdb-word.new { color: #18FFFF}
-.jpdb-word.not-in-deck { color: #40C4FF }
-.jpdb-word.known { color: #1B5E20 }
-.jpdb-word.learning { color: #33691E }
-.jpdb-word.due { color: #FFD180 }
-.jpdb-word.failed { color: #FF8A80 }
-.jpdb-word.unparsed { color: #616161 }
-.jpdb-word.blacklisted { color:  #616161 }
-*/
-
 /***** E-ink screen new word visibility border - horizontal text version *****/
 /*
 .jpdb-word.new { border-bottom: 2px solid }
@@ -127,8 +117,13 @@ article { max-height: 50vh }
 
 
 /* Hide never forget and edit buttons */
-
-button.edit-add-review,button.never-forget { display:none; }`,
+/*
+button.edit-add-review,
+button.never-forget,
+button.blacklist { 
+    display:none;
+}
+*/`,
 
   showPopupOnHover: false,
   touchscreenSupport: false,
@@ -142,6 +137,8 @@ button.edit-add-review,button.never-forget { display:none; }`,
   disable2DReviewing: false,
   disableJPDBAutoParsing: false,
 
+  closeOnPopupClick: true,
+  useShorterButtonNames: true,
   moveLinksToPopup: true,
   gradeButtonsAtBottom: true,
   prioritizePopupAboveWord: true,
