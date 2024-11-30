@@ -55,10 +55,12 @@ if (start_review_form) {
   start_review_form.insertAdjacentElement('beforebegin', new_buttons_container);
 
   new_review_button.addEventListener('click', () => {
-    window.location.href = 'https://jpdb.io/deck?id=global&show_only=overdue,failed&sort_by=by-frequency-global#a';
+    window.location.href =
+      'https://jpdb.io/deck?id=global&show_only=overdue,failed&sort_by=by-frequency-global&plus-alpha-setup=yeah_bro#a';
   });
 
   learn_new_button.addEventListener('click', () => {
-    window.location.href = 'https://jpdb.io/deck?id=global&show_only=new&sort_by=by-frequency-global#a';
+    window.location.href =
+      'https://jpdb.io/deck?id=global&show_only=new&sort_by=by-frequency-global&plus-alpha-setup=yeah_bro#a';
   });
 }

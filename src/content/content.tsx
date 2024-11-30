@@ -18,7 +18,12 @@ function moveParentLinkIfExists(element: HTMLElement | undefined) {
     if (parent.tagName.toLowerCase() === 'a' && parent.getAttribute('href')) {
       const href = `${parent.getAttribute('href')}`;
       parent.removeAttribute('href');
-      element.setAttribute('original-link', href);
+
+      // Add original-link to all JPDB words in link
+      parent.querySelectorAll('.jpdb-word').forEach(word => {
+        word.setAttribute('original-link', href);
+      });
+
       return href;
     }
     parent = parent.parentElement;

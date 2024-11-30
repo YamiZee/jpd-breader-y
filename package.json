@@ -24,9 +24,5 @@
     "prettier": "^3.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
-  },
-  "dependencies": {
-    "forprogress": "^2.1.5",
-    "progressbar.js": "^1.1.1"
   }
 }

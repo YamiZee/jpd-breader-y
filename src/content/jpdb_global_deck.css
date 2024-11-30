@@ -60,32 +60,32 @@ body > button:last-of-type {
 .pagination {
   justify-content: space-between;
   margin-bottom: 0 !important;
-  padding-top: 1rem !important;
-  margin-top: -1rem !important;
-  padding-bottom: 1rem !important;
+  padding-top: 0.75rem !important;
+  margin-top: -0.75rem !important;
+  padding-bottom: 0.75rem !important;
 }
 
 .pagination a {
   padding: 0.5rem !important;
   margin-top: -0.5rem !important;
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 0rem !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
   min-width: 0 !important;
 }
 
-.pagination div,
-.pagination a {
+.pagination div {
   flex-grow: 1 !important;
   flex-basis: 0 !important;
+  display: flex;
 }
 
-.pagination div:last-of-type,
-.pagination a:last-of-type {
+.pagination div:last-of-type {
+  justify-content: right;
   text-align: end;
 }
-.pagination div:first-of-type,
-.pagination a:first-of-type {
+.pagination div:first-of-type {
+  justify-content: left;
   text-align: start;
 }
 

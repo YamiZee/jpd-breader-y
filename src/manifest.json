@@ -43,18 +43,14 @@
       "js": ["jpdb_plus_alpha/search_page_additions.js"]
     },
     {
-      "matches": ["*://jpdb.io/deck?id=global*"],
+      "matches": ["*://jpdb.io/deck*"],
+      "include_globs": ["*://jpdb.io/deck*plus-alpha-setup=yeah_bro*"],
       "js": ["content/progressbar.js", "content/jpdb_global_deck.js"],
       "css": ["content/jpdb_global_deck.css"]
     },
     {
       "matches": ["*://jpdb.io/*/vocabulary-list", "*://jpdb.io/deck*"],
       "js": ["integrations/jpdb_vocabulary_lists.js"],
-      "css": ["content/word.css"]
-    },
-    {
-      "matches": ["*://mugendecks.com/coverage*"],
-      "js": ["integrations/parse_selection.js"],
       "css": ["content/word.css"]
     },
     {
@@ -135,7 +131,6 @@
     "*://renji-xd.github.io/texthooker-ui/",
     "file:///*mokuro*.html",
     "*://*.mokuro.moe/*",
-    "*://*.mugendecks.com/*",
     "*://ja.wikipedia.org/*",
     "*://ja.m.wikipedia.org/*",
     "*://app.readwok.com/*",

@@ -1,3 +1,12 @@
+# Version ＋α 1.6
+
+Have the video shot and mostly edited! Just making the last few fixes (that I know of lol) before I release this.
+
+- In the case that there are multiple parsed JPDB words in a single link, make sure link gets added to all jpdb word popups
+- Add custom URL parameter on Review in 2D and Learn New Words buttons so crazy CSS styling doesn't bleed over into all /deck&id=global pages
+- Fix alignment on Prev Page and Next Page links
+- Add super basic privacy policy for the App Store
+
 # Version ＋α 1.5
 
 I'm hoping there's nothing else major I need to change before I release the video about this (but also I hope there's nothing major I need to fix AFTER I release it lol)
