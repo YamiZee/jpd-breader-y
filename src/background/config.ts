@@ -67,10 +67,11 @@ export const defaultConfig: Config = {
 These are easily editable or deletable styling options that I'm leaving on by default and think others would like too.
 Feel free to delete them or surround the options you don't want with /* and */
 
-/***** Don't change colors for known, blacklisted, or unparsed words *****
+/***** Don't change colors for known, never-forget, blacklisted, or unparsed words *****
  * This keeps all colors for JPDB.io pages (for 2D reviewing etc.)  */
 
 .jpdb-word.known:not(div.vocabulary-list .jpdb-word.known) { color: inherit }
+.jpdb-word.never-forget:not(div.vocabulary-list .jpdb-word.never-forget) { color: inherit }
 .jpdb-word.blacklisted:not(div.vocabulary-list .jpdb-word.blacklisted) { color: inherit }
 .jpdb-word.unparsed:not(div.vocabulary-list .jpdb-word.unparsed) { color: inherit }
 
@@ -99,14 +100,14 @@ html.dark-mode, html.dark-mode body {
 
 /***** E-ink screen new word visibility border - horizontal text version *****/
 /*
-.jpdb-word.new { border-bottom: 2px solid }
-.jpdb-word.not-in-deck { border-bottom: 2px dashed }
+.jpdb-word.new { border-bottom: 2px solid; color: #2979FF }
+.jpdb-word.not-in-deck { border-bottom: 2px dashed; color: #2979FF }
 */
 
 /***** E-ink screen new word visibility border - vertical text version *****/
 /*
-.jpdb-word.new{ border-left: 2px solid }
-.jpdb-word.not-in-deck{ border-left: 2px dashed }
+.jpdb-word.new{ border-left: 2px solid; color: #2979FF }
+.jpdb-word.not-in-deck{ border-left: 2px dashed; color: #2979FF }
 */`,
 
   customPopupCSS: `/* Make review/mining buttons bigger for mobile */
