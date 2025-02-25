@@ -25,6 +25,11 @@ export type Config = {
     touchscreenSupport: boolean;
     disableFadeAnimation: boolean;
 
+    hideVocabOSuccessfulGrade: boolean;
+    gradeButtonsAtBottom: boolean;
+    closeOnPopupClick: boolean;
+    useShorterButtonNames: boolean;
+
     showPopupKey: Keybind;
     addKey: Keybind;
     dialogKey: Keybind;
@@ -55,6 +60,11 @@ export const defaultConfig: Config = {
     showPopupOnHover: false,
     touchscreenSupport: false,
     disableFadeAnimation: false,
+
+    hideVocabOSuccessfulGrade: true,
+    gradeButtonsAtBottom: false,
+    closeOnPopupClick: true,
+    useShorterButtonNames: false,
 
     showPopupKey: { key: 'Shift', code: 'ShiftLeft', modifiers: [] },
     addKey: null,

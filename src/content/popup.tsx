@@ -280,6 +280,9 @@ export class Popup {
             <link rel='stylesheet' href={browser.runtime.getURL('/content/popup.css')} />,
             (this.#customStyle = <style></style>),
             <article lang='ja'>
+                {config && config.gradeButtonsAtBottom
+                    ? (this.#vocabSection = <section id='vocab-content'></section>)
+                    : ''}
                 {(this.#mineButtons = <section id='mine-buttons'></section>)}
                 <section id='review-buttons'>
                     <button
@@ -287,14 +290,14 @@ export class Popup {
                         onclick={
                             demoMode ? undefined : async () => await requestReview(this.#data.token.card, 'nothing')
                         }>
-                        Nothing
+                        {config && config.useShorterButtonNames ? 'None' : 'Nothing'}
                     </button>
                     <button
                         class='something'
                         onclick={
                             demoMode ? undefined : async () => await requestReview(this.#data.token.card, 'something')
                         }>
-                        Something
+                        {config && config.useShorterButtonNames ? 'Some' : 'Something'}
                     </button>
                     <button
                         class='hard'
@@ -312,11 +315,26 @@ export class Popup {
                         Easy
                     </button>
                 </section>
-                {(this.#vocabSection = <section id='vocab-content'></section>)}
+                {!config || !config.gradeButtonsAtBottom
+                    ? (this.#vocabSection = <section id='vocab-content'></section>)
+                    : ''}
             </article>,
         );
 
         this.#outerStyle = this.#element.style;
+
+        // Close out popup if clicking/tapping on non-button
+        this.#vocabSection.addEventListener('click', e => {
+            const target_classlist = (e.target as HTMLElement).classList;
+            if (
+                config &&
+                config.closeOnPopupClick &&
+                !target_classlist.contains('spelling') &&
+                !target_classlist.contains('reading')
+            ) {
+                this.fadeOut();
+            }
+        });
     }
 
     fadeIn() {
