@@ -43,17 +43,17 @@ if (!success) {
 
 // FIX IMPORT PATHS
 async function fixImportPathsInDir(dir: string) {
-    const files = await fs.readdir(dir, { withFileTypes: true });
-    for (const file of files) {
-        const fullPath = `${dir}/${file.name}`;
-        if (file.isDirectory()) {
-            await fixImportPathsInDir(fullPath);
-        } else if (file.isFile() && fullPath.endsWith('.js')) {
-            let content = await fs.readFile(fullPath, 'utf-8');
-            content = content.replace(/\\\\/g, '/');
-            await fs.writeFile(fullPath, content);
-        }
+  const files = await fs.readdir(dir, { withFileTypes: true });
+  for (const file of files) {
+    const fullPath = `${dir}/${file.name}`;
+    if (file.isDirectory()) {
+      await fixImportPathsInDir(fullPath);
+    } else if (file.isFile() && fullPath.endsWith('.js')) {
+      let content = await fs.readFile(fullPath, 'utf-8');
+      content = content.replace(/\\\\/g, '/');
+      await fs.writeFile(fullPath, content);
     }
+  }
 }
 console.log('Fixing import paths...');
 await fixImportPathsInDir('build');
