@@ -39,6 +39,8 @@ export type Config = {
   prioritizePopupAboveWord: boolean;
   prioritizePopupToRightOfWord: boolean;
 
+  showPopupOnMouseLeft: boolean;
+
   showPopupKey: Keybind;
   addKey: Keybind;
   dialogKey: Keybind;
@@ -144,6 +146,8 @@ button.blacklist {
   gradeButtonsAtBottom: true,
   prioritizePopupAboveWord: true,
   prioritizePopupToRightOfWord: true,
+
+  showPopupOnMouseLeft: true,
 
   showPopupKey: { key: 'Shift', code: 'ShiftLeft', modifiers: [] },
   addKey: null,
