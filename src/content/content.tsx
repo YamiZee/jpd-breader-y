@@ -177,3 +177,14 @@ export function onWordHoverStart({ target, x, y }: MouseEvent) {
 export function onWordHoverStop() {
   currentHover = null;
 }
+
+// For video players (may cause issues if some keybinds are also set to space)
+window.addEventListener(
+  'keydown',
+  function (event) {
+    if (event.code === 'Space') {
+      Popup.get().fadeOut();
+    }
+  },
+  true,
+);
