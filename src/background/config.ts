@@ -22,7 +22,7 @@ export type Config = {
     touchscreenSupport: boolean;
     disableFadeAnimation: boolean;
 
-    hideVocabOSuccessfulGrade: boolean;
+    closePopupOnReview: boolean;
     gradeButtonsAtBottom: boolean;
     closeOnPopupClick: boolean;
     useShorterButtonNames: boolean;
@@ -61,7 +61,7 @@ export const defaultConfig: Config = {
     touchscreenSupport: false,
     disableFadeAnimation: false,
 
-    hideVocabOSuccessfulGrade: true,
+    closePopupOnReview: true,
     gradeButtonsAtBottom: false,
     closeOnPopupClick: true,
     useShorterButtonNames: false,

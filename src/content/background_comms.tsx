@@ -51,6 +51,7 @@ export function requestMine(card: Card, forq: boolean, sentence?: string, transl
 }
 
 export function requestReview(card: Card, rating: Grade) {
+    if (config.closePopupOnReview) Popup.get().fadeOut();
     return requestUnabortable({ type: 'review', rating, vid: card.vid, sid: card.sid });
 }
 
