@@ -138,7 +138,10 @@ export function onWordHoverStart({ target, x, y }: MouseEvent) {
     }
 }
 
-export function onWordHoverStop() {
+export function onWordHoverStop(event: MouseEvent) {
+    if (config.closePopupOnMouseLeave && !Popup.get().containsMouse(event)) {
+        Popup.get().fadeOut();
+    }
     currentHover = null;
 }
 

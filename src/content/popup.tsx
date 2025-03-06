@@ -486,7 +486,8 @@ export class Popup {
     }
 
     containsMouse(event: MouseEvent): boolean {
-        const targetElement = event.target as HTMLElement;
+        const targetElement =
+            event.type !== 'mouseleave' ? (event.target as HTMLElement) : (event.relatedTarget as HTMLElement);
 
         if (targetElement) {
             return this.#element.contains(targetElement);
