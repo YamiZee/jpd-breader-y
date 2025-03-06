@@ -62,9 +62,9 @@ export const defaultConfig: Config = {
     disableFadeAnimation: false,
 
     closePopupOnReview: true,
-    gradeButtonsAtBottom: false,
+    gradeButtonsAtBottom: true,
     closeOnPopupClick: true,
-    useShorterButtonNames: false,
+    useShorterButtonNames: true,
 
     showPopupOnMouseClick: true,
     closePopupOnMouseLeave: false,
@@ -117,9 +117,7 @@ Feel free to delete them or surround the options you don't want with /* and */
 :where(.jpdb-word.known) { color: rgb(112, 192, 0); }
 :where(.jpdb-word.due) { color: rgb(255, 69, 0); }
 :where(.jpdb-word.failed) { color: rgb(255, 0, 0); }
-*****/
-
-`,
+*****/`,
     customPopupCSS: `/* Make review/mining buttons bigger */
 button { padding:10px 10px; font-size: 14px; flex-grow:1 }
 #mine-buttons button { padding: 8px 0; }

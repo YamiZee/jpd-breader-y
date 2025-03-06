@@ -192,31 +192,32 @@
                 </section>
                 <section id="accessibility">
                     <h1>Accessibility</h1>
-                    <div class="explanation">
-                        Use the mouse click setting below instead of the keybind to allow selecting text.
-                    </div>
-                    <setting-boolean class="setting" name="showPopupOnMouseClick"
-                        >Show the popup on mouse click</setting-boolean
-                    >
-                    <setting-boolean class="setting" name="showPopupOnHover">Show the popup on hover</setting-boolean>
-                    <setting-boolean class="setting" name="closePopupOnMouseLeave"
-                        >Close the popup on mouse leave</setting-boolean
-                    >
                     <setting-boolean class="setting" name="touchscreenSupport">Touchscreen support</setting-boolean>
                     <setting-boolean class="setting" name="disableFadeAnimation"
                         >Disable fade animation</setting-boolean
                     >
                 </section>
-                <section id="plusalpha">
-                    <h1>＋α Settings</h1>
-                    <setting-boolean class="setting" name="closePopupOnReview">
-                        Auto-close popup on successful review</setting-boolean
+                <section id="popup-behavior">
+                    <h1>Popup Behavior</h1>
+                    <setting-boolean class="setting" name="showPopupOnHover">Show the popup on hover</setting-boolean>
+                    <setting-boolean class="setting" name="closePopupOnMouseLeave"
+                        >Close the popup on mouse leave</setting-boolean
                     >
-                    <setting-boolean class="setting" name="gradeButtonsAtBottom"
-                        >Move popup add/grade buttons to bottom</setting-boolean
+                    <!-- Use the mouse click setting below instead of the keybind to allow selecting text. -->
+                    <setting-boolean class="setting" name="showPopupOnMouseClick"
+                        >Show the popup on mouse click</setting-boolean
                     >
                     <setting-boolean class="setting" name="closeOnPopupClick"
-                        >Close popup on non-button/link tap</setting-boolean
+                        >Close the popup on non-button/link tap</setting-boolean
+                    >
+                    <setting-boolean class="setting" name="closePopupOnReview">
+                        Close the popup on successful review</setting-boolean
+                    >
+                </section>
+                <section id="popup-style">
+                    <h1>Popup Style</h1>
+                    <setting-boolean class="setting" name="gradeButtonsAtBottom"
+                        >Move popup add/grade buttons to bottom</setting-boolean
                     >
                     <setting-boolean class="setting" name="useShorterButtonNames"
                         >Use "none" and "some" instead of "nothing" and "something"</setting-boolean
