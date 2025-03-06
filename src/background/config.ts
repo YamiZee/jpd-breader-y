@@ -27,7 +27,7 @@ export type Config = {
     closeOnPopupClick: boolean;
     useShorterButtonNames: boolean;
 
-    showPopupOnMouseLeft: boolean;
+    showPopupOnMouseClick: boolean;
     closePopupOnMouseLeave: boolean;
 
     showPopupKey: Keybind;
@@ -66,7 +66,7 @@ export const defaultConfig: Config = {
     closeOnPopupClick: true,
     useShorterButtonNames: false,
 
-    showPopupOnMouseLeft: true,
+    showPopupOnMouseClick: true,
     closePopupOnMouseLeave: false,
 
     showPopupKey: { key: 'Shift', code: 'ShiftLeft', modifiers: [] },

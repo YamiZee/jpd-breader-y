@@ -48,7 +48,7 @@ async function hotkeyListener(event: KeyboardEvent | MouseEvent) {
                 event.preventDefault();
                 Popup.get().showForWord(word, x, y);
             }
-            if (config.showPopupOnMouseLeft && event instanceof MouseEvent && event.buttons == 1) {
+            if (config.showPopupOnMouseClick && event instanceof MouseEvent && event.buttons == 1) {
                 Popup.get().showForWord(word, x, y);
             }
 
