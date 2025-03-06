@@ -335,6 +335,12 @@ export class Popup {
                 this.fadeOut();
             }
         });
+
+        this.#element.addEventListener('mouseleave', () => {
+            if (config && config.closePopupOnMouseLeave) {
+                this.fadeOut();
+            }
+        });
     }
 
     fadeIn() {
