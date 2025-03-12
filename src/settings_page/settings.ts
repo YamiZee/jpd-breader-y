@@ -5,6 +5,7 @@ import { showError } from '../content/toast.js';
 import { JpdbWordData } from '../content/word.js';
 import { assert, nonNull, wrap } from '../util.js';
 import { defineCustomElements, SettingElement } from './elements.js';
+import { resetOccurrenceMaps } from '../background/occurrences.js';
 
 // Custom element definitions
 
@@ -43,6 +44,7 @@ const POPUP_EXAMPLE_DATA: JpdbWordData = {
             ],
             state: ['locked', 'new'],
             frequencyRank: 2400,
+            occurrences: 24,
         },
     },
 };
@@ -169,6 +171,21 @@ try {
         } catch (error) {
             showError(error);
         }
+    });
+
+    const syncButton = nonNull(document.querySelector('#syncOccur')) as HTMLButtonElement;
+    syncButton.addEventListener('click', () => {
+        syncButton.disabled = true;
+        resetOccurrenceMaps(config.occurDeckIds!)
+            .then(() => {
+                syncButton.disabled = false;
+                window.alert('Sync successful!');
+            })
+            .catch(error => {
+                syncButton.disabled = false;
+                console.log(error.message);
+                alert('Something went wrong! Make sure your deck ids are correct!');
+            });
     });
 } catch (error) {
     showError(error);

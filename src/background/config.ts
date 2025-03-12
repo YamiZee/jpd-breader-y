@@ -29,6 +29,7 @@ export type Config = {
 
     showPopupOnMouseClick: boolean;
     closePopupOnMouseLeave: boolean;
+    occurDeckIds: string;
 
     showPopupKey: Keybind;
     addKey: Keybind;
@@ -68,6 +69,7 @@ export const defaultConfig: Config = {
 
     showPopupOnMouseClick: true,
     closePopupOnMouseLeave: false,
+    occurDeckIds: '',
 
     showPopupKey: { key: 'Shift', code: 'ShiftLeft', modifiers: [] },
     addKey: null,

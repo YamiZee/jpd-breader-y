@@ -3,6 +3,7 @@ import { DeckId, Grade, Token } from '../types.js';
 import { loadConfig } from './config.js';
 import { browser, isChrome, PromiseHandle, sleep } from '../util.js';
 import * as backend from './backend.js';
+import { getOccurrence, incrementOccurrence } from './occurrences.js';
 
 export let config = loadConfig();
 
@@ -98,7 +99,13 @@ async function batchParses() {
             handle.resolve(tokens[i]);
         }
 
+        for (let i = 0; i < cards.length; i++) {
+            const occurrences = await getOccurrence(cards[i].vid, cards[i].sid, config.occurDeckIds!);
+            cards[i].occurrences = occurrences;
+        }
+
         broadcast({ type: 'updateWordState', words: cards.map(card => [card.vid, card.sid, card.state]) });
+        broadcast({ type: 'updateOccurrence', words: cards.map(card => [card.vid, card.sid, card.occurrences]) });
 
         return [null, timeout] as [null, number];
     } catch (error) {
@@ -251,6 +258,10 @@ const messageHandlers: {
 
         postResponse(port, request, null);
         await broadcastNewWordState(request.vid, request.sid);
+
+        incrementOccurrence(request.vid, request.sid, Number(config.miningDeckId));
+        const occurence = await getOccurrence(request.vid, request.sid, config.occurDeckIds);
+        if (occurence) broadcast({ type: 'updateOccurrence', words: [[request.vid, request.sid, occurence]] });
     },
 };
 

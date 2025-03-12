@@ -157,5 +157,18 @@ port.onMessage.addListener((message: BackgroundToContentMessage, port) => {
                 Popup.get().render();
             }
             break;
+
+        case 'updateOccurrence':
+            {
+                for (const [vid, sid, occurrences] of message.words) {
+                    const idx = reverseIndex.get(`${vid}/${sid}`);
+                    if (idx === undefined) continue;
+                    for (const element of idx.elements) {
+                        element.jpdbData.token.card.occurrences = occurrences;
+                    }
+                }
+                Popup.get().render();
+            }
+            break;
     }
 });

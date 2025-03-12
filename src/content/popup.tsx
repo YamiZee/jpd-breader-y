@@ -419,6 +419,7 @@ export class Popup {
             <div class='metainfo'>
                 <span class='freq'>{card.frequencyRank ? `Top ${card.frequencyRank}` : ''}</span>
                 {card.pitchAccent.map(pitch => renderPitch(card.reading, pitch))}
+                <span class='occur'>{card.occurrences != -1 ? `Occurrences: ${card.occurrences}` : ''}</span>
             </div>,
             ...groupedMeanings.flatMap(meanings => [
                 <h2>

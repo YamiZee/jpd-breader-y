@@ -134,6 +134,7 @@ export async function parse(text: string[]): Response<[Token[][], Card[]]> {
             meanings: meaningsChunks.map((glosses, i) => ({ glosses, partOfSpeech: meaningsPartOfSpeech[i] })),
             state: cardState ?? ['not-in-deck'],
             pitchAccent: pitchAccent ?? [], // HACK not documented... in case it can be null, better safe than sorry
+            occurrences: -1,
         };
     });
 
@@ -399,4 +400,62 @@ export async function getCardState(vid: number, sid: number): Response<CardState
     if (vocabInfo === null) throw Error(`Can't get state for word ${vid}/${sid}, word does not exist`);
 
     return [vocabInfo[0] ?? ['not-in-deck'], API_RATELIMIT];
+}
+
+export async function getVocabOccurenceMap(deck_id: number): Response<Map<string, number>> {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${config.apiToken}`,
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({
+            id: deck_id,
+            fetch_occurences: true,
+        }),
+    };
+
+    const response = await fetch('https://jpdb.io/api/v1/deck/list-vocabulary', options);
+
+    if (!(200 <= response.status && response.status <= 299)) {
+        const data = (await response.json()) as JpdbError;
+        throw Error(`${data.error_message} while getting vocabulary list for deck ${deck_id}`);
+    }
+
+    const data = (await response.json()) as { vocabulary: number[][]; occurences: number[] };
+
+    const occurenceMap = new Map<string, number>();
+    for (let i = 0; i < data.vocabulary.length; i++) {
+        occurenceMap.set(data.vocabulary[i].join(','), data.occurences[i]);
+    }
+
+    return [occurenceMap, API_RATELIMIT];
+}
+
+export async function listUserDecks(): Response<number[]> {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${config.apiToken}`,
+            Accept: 'application/json',
+        },
+        body: JSON.stringify({
+            fields: ['id'],
+        }),
+    };
+
+    const response = await fetch('https://jpdb.io/api/v1/list-user-decks', options);
+
+    if (!(200 <= response.status && response.status <= 299)) {
+        const data = (await response.json()) as JpdbError;
+        throw Error(`${data.error_message} while getting list of decks`);
+    }
+
+    const data = (await response.json()) as { decks: number[][] };
+
+    console.log('Deck list:', data['decks'].flat());
+
+    return [data['decks'].flat(), API_RATELIMIT];
 }

@@ -16,6 +16,7 @@ export type ContentToBackgroundMessage =
 export type BackgroundToContentMessage =
     | UpdateConfigCommand
     | UpdateWordStateCommand
+    | UpdateOccurrenceCommand
     | ParseResponse
     | NullResponse
     | ErrorResponse
@@ -108,4 +109,9 @@ export type UpdateConfigCommand = {
 export type UpdateWordStateCommand = {
     type: 'updateWordState';
     words: [number, number, CardState][];
+};
+
+export type UpdateOccurrenceCommand = {
+    type: 'updateOccurrence';
+    words: [number, number, number][];
 };

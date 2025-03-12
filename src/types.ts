@@ -36,4 +36,5 @@ export type Card = {
     frequencyRank: number | null;
     pitchAccent: string[];
     meanings: { glosses: string[]; partOfSpeech: string[] }[];
+    occurrences: number;
 };
