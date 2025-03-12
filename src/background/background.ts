@@ -102,6 +102,14 @@ async function batchParses() {
         for (let i = 0; i < cards.length; i++) {
             const occurrences = await getOccurrence(cards[i].vid, cards[i].sid, config.occurDeckIds!);
             cards[i].occurrences = occurrences;
+
+            if (config.newDeckIds && config.newDeckIds != 'all') {
+                const news = await getOccurrence(cards[i].vid, cards[i].sid, config.newDeckIds!);
+                if (news <= 0) {
+                    const state_i = cards[i].state.indexOf('new');
+                    if (state_i !== -1) cards[i].state[state_i] = 'not-in-deck';
+                }
+            }
         }
 
         broadcast({ type: 'updateWordState', words: cards.map(card => [card.vid, card.sid, card.state]) });
@@ -160,7 +168,12 @@ function onPortDisconnect(port: browser.runtime.Port) {
 }
 
 async function broadcastNewWordState(vid: number, sid: number) {
-    broadcast({ type: 'updateWordState', words: [[vid, sid, await getCardState(vid, sid)]] });
+    const cardState = await getCardState(vid, sid);
+    if (config.newDeckIds && config.newDeckIds != 'all' && (await getOccurrence(vid, sid, config.newDeckIds)) <= 0) {
+        const state_i = cardState.indexOf('new');
+        if (state_i !== -1) cardState[state_i] = 'not-in-deck';
+    }
+    broadcast({ type: 'updateWordState', words: [[vid, sid, cardState]] });
 }
 
 // Chrome can't send Error objects over background ports, so we have to serialize and deserialize them...

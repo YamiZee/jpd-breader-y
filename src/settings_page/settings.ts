@@ -176,7 +176,11 @@ try {
     const syncButton = nonNull(document.querySelector('#syncOccur')) as HTMLButtonElement;
     syncButton.addEventListener('click', () => {
         syncButton.disabled = true;
-        resetOccurrenceMaps(config.occurDeckIds!)
+        const decksIds =
+            config.occurDeckIds == 'all'
+                ? 'all'
+                : `${config.occurDeckIds},${config.newDeckIds == 'all' ? '' : config.newDeckIds}`;
+        resetOccurrenceMaps(decksIds)
             .then(() => {
                 syncButton.disabled = false;
                 window.alert('Sync successful!');

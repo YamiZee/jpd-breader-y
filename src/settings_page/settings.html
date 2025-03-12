@@ -227,9 +227,12 @@
                     <h1>Occurrence</h1>
                     <div class="explanation">
                         Separated by comma. Use "all" to fetch all of your decks. <br />
-                        Recommended usage is to set this to the same id as your mining deck.
+                        New cards field should either be blank, or contain your mining deck id. <br />
+                        Recommended usage for occurrence is to set it to one of the following: <br />
+                        - all, your mining deck, or a deck for the content you're currently consuming.
                     </div>
-                    <setting-string class="setting" name="occurDeckIds">Occurrence deck IDs</setting-string>
+                    <setting-string class="setting" name="newDeckIds">Restrict new cards to decks</setting-string>
+                    <setting-string class="setting" name="occurDeckIds">Show occurrence from decks</setting-string>
                     <button id="syncOccur">Sync Occurrence</button>
                 </section>
                 <section id="appearance">
