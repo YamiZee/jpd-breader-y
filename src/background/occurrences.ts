@@ -1,10 +1,12 @@
 import * as backend from './backend.js';
 
 const deckVocabOccurMap = new Map<string, Map<string, number>>();
+let userDeckIDs: number[] | null = null;
 
 export async function resetOccurrenceMaps(deck_ids: number[] | string) {
     deck_ids = typeof deck_ids === 'number' ? [deck_ids] : deck_ids;
-    if (deck_ids == 'all') deck_ids = (await backend.listUserDecks())[0];
+    userDeckIDs = null;
+    if (deck_ids == 'all') deck_ids = await getUserDeckIDs();
     if (typeof deck_ids === 'string') {
         deck_ids = deck_ids.split(',').map(Number);
     }
@@ -18,7 +20,7 @@ export async function resetOccurrenceMaps(deck_ids: number[] | string) {
 
 export async function getOccurrence(vid: number, sid: number, deck_ids: number[] | string) {
     deck_ids = typeof deck_ids === 'number' ? [deck_ids] : deck_ids;
-    if (deck_ids == 'all') deck_ids = (await backend.listUserDecks())[0];
+    if (deck_ids == 'all') deck_ids = await getUserDeckIDs();
     if (typeof deck_ids === 'string') {
         deck_ids = deck_ids.split(',').map(Number);
     }
@@ -83,6 +85,11 @@ function setCachedOccurMap(deck_id: number, map: Map<string, number>) {
         occurMap.set(deck_id.toString(), map);
         localStorage.setItem('occurMap', mapToJson(occurMap));
     }
+}
+
+async function getUserDeckIDs() {
+    if (!userDeckIDs) userDeckIDs = (await backend.listUserDecks())[0];
+    return userDeckIDs;
 }
 
 function mapToJson(map: Map<string, any>) {
