@@ -47,7 +47,6 @@ export function incrementOccurrence(vid: number, sid: number, deck_id: number) {
 async function getVocabOccurMap(deck_id: number) {
     const localOccurMap = deckVocabOccurMap.get(deck_id.toString());
     if (localOccurMap) {
-        console.log(`Occurance map for deck ${deck_id} fetched locally`);
         return localOccurMap;
     }
 
