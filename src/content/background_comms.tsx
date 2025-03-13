@@ -143,7 +143,10 @@ port.onMessage.addListener((message: BackgroundToContentMessage, port) => {
                     const idx = reverseIndex.get(`${vid}/${sid}`);
                     if (idx === undefined) continue;
 
-                    const className = `jpdb-word ${state.join(' ')}`;
+                    const freqRank = idx.elements[0].jpdbData.token.card.frequencyRank;
+                    const freqClass = (freqRank || config.lowFrequency) < config.lowFrequency ? 'frequent' : '';
+
+                    const className = `jpdb-word ${state.join(' ')} ${freqClass}`;
                     if (idx.className === className) continue;
 
                     for (const element of idx.elements) {

@@ -31,6 +31,7 @@ export type Config = {
     closePopupOnMouseLeave: boolean;
     newDeckIds: string;
     occurDeckIds: string;
+    lowFrequency: number;
 
     showPopupKey: Keybind;
     addKey: Keybind;
@@ -72,6 +73,7 @@ export const defaultConfig: Config = {
     closePopupOnMouseLeave: false,
     newDeckIds: '',
     occurDeckIds: '',
+    lowFrequency: 0,
 
     showPopupKey: { key: 'Shift', code: 'ShiftLeft', modifiers: [] },
     addKey: null,
@@ -95,6 +97,9 @@ Feel free to delete them or surround the options you don't want with /* and */
 .jpdb-word.failed { color: rgb(255, 100, 100); }
 .jpdb-word.suspended {color: rgb(150, 150, 150); }
 
+.jpdb-word.frequent.new {color: rgb(170, 230, 235); }
+.jpdb-word.frequent.not-in-deck {color: rgb(160, 235, 200); }
+
 :where(.jpdb-word:not(.unparsed):hover) { text-decoration: underline; }
 
 /*  Hide furigana unless hovering  */
@@ -106,6 +111,9 @@ Feel free to delete them or surround the options you don't want with /* and */
 
 /*  Transitions  */
 .jpdb-word { transition: color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+
+/*  Grey out infrequent words  */
+/*.jpdb-word:is(.new, .not-in-deck):not(.frequent) {color: rgb(160, 160, 180); }*/
 
 /*  Base default settings  */
 /*****

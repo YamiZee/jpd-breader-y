@@ -3,6 +3,7 @@ import { nonNull } from '../util.js';
 import { jsxCreateElement } from '../jsx.js';
 import { onWordHoverStart, onWordHoverStop } from './content.js';
 import { JpdbWord } from './word.js';
+import { config } from './background_comms.js';
 
 export type Fragment = {
     start: number;
@@ -136,8 +137,11 @@ export function applyTokens(fragments: Paragraph, tokens: Token[]) {
                 splitFragment(fragments, fragmentIndex, token.end);
             }
 
+            const freqRank = token.card.frequencyRank;
+            const freqClass = (freqRank || config.lowFrequency) < config.lowFrequency ? 'frequent' : '';
+
             // console.log('Part of token:', fragment.node.data);
-            const className = `jpdb-word ${token.card.state.join(' ')}`;
+            const className = `jpdb-word ${token.card.state.join(' ')} ${freqClass}`;
             const wrapper = (
                 token.rubies.length > 0 && !fragment.hasRuby ? (
                     <ruby class={className} onmouseenter={onWordHoverStart} onmouseleave={onWordHoverStop}></ruby>
