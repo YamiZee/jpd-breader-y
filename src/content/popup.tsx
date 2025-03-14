@@ -247,13 +247,14 @@ export class Popup {
         return this.#popup;
     }
 
-    static getDemoMode(parent: HTMLElement): Popup {
-        const popup = new this(true);
+    static getDemoMode(parent: HTMLElement, _config = config): Popup {
+        const popup = new this(true, _config);
+        parent.innerHTML = '';
         parent.append(popup.#element);
         return popup;
     }
 
-    constructor(demoMode = false) {
+    constructor(demoMode = false, _config = config) {
         this.#demoMode = demoMode;
 
         this.#element = (
@@ -269,7 +270,9 @@ export class Popup {
                     event.stopPropagation();
                 }}
                 style={`all:initial;z-index:2147483647;${
-                    demoMode ? '' : 'position:absolute;top:0;left:0;opacity:0;visibility:hidden;'
+                    demoMode
+                        ? 'opacity:0;visibility:hidden;'
+                        : 'position:absolute;top:0;left:0;opacity:0;visibility:hidden;'
                 };`}></div>
         );
 
@@ -280,7 +283,7 @@ export class Popup {
             <link rel='stylesheet' href={browser.runtime.getURL('/content/popup.css')} />,
             (this.#customStyle = <style></style>),
             <article lang='ja'>
-                {config && config.gradeButtonsAtBottom
+                {_config && _config.gradeButtonsAtBottom
                     ? (this.#vocabSection = <section id='vocab-content'></section>)
                     : ''}
                 {(this.#mineButtons = <section id='mine-buttons'></section>)}
@@ -290,14 +293,14 @@ export class Popup {
                         onclick={
                             demoMode ? undefined : async () => await requestReview(this.#data.token.card, 'nothing')
                         }>
-                        {config && config.useShorterButtonNames ? 'None' : 'Nothing'}
+                        {_config && _config.useShorterButtonNames ? 'None' : 'Nothing'}
                     </button>
                     <button
                         class='something'
                         onclick={
                             demoMode ? undefined : async () => await requestReview(this.#data.token.card, 'something')
                         }>
-                        {config && config.useShorterButtonNames ? 'Some' : 'Something'}
+                        {_config && _config.useShorterButtonNames ? 'Some' : 'Something'}
                     </button>
                     <button
                         class='hard'
@@ -315,7 +318,7 @@ export class Popup {
                         Easy
                     </button>
                 </section>
-                {!config || !config.gradeButtonsAtBottom
+                {!_config || !_config.gradeButtonsAtBottom
                     ? (this.#vocabSection = <section id='vocab-content'></section>)
                     : ''}
             </article>,
@@ -354,6 +357,7 @@ export class Popup {
     }
 
     fadeOut() {
+        if (this.#demoMode) return;
         // Necessary because in settings page, config is undefined
         // TODO is this still true? ~hmry(2023-08-08)
         if (config && !config.disableFadeAnimation) {

@@ -74,6 +74,7 @@ addEventListener(
 
 try {
     const config = loadConfig();
+    const demoConfig = loadConfig();
 
     defineCustomElements();
 
@@ -149,9 +150,32 @@ try {
         (elem as any).value = (config as any)[(elem as any).name] ?? null;
     }
 
-    const popup = Popup.getDemoMode(nonNull(document.querySelector('#preview')));
+    const preview = nonNull(document.querySelector<HTMLElement>('#preview'));
+    let popup = Popup.getDemoMode(preview, demoConfig);
+    popup.updateStyle(config.customPopupCSS);
     popup.setData(POPUP_EXAMPLE_DATA);
     popup.fadeIn();
+
+    function updatePopup(ms = 30): Popup {
+        popup = Popup.getDemoMode(preview, demoConfig);
+        popup.updateStyle(config.customPopupCSS);
+        popup.setData(POPUP_EXAMPLE_DATA);
+        setTimeout(() => {
+            popup.fadeIn();
+        }, ms);
+        return popup;
+    }
+
+    const gradeButtonsAtBottom = nonNull(document.querySelector<SettingElement>('[name="gradeButtonsAtBottom"]'));
+    gradeButtonsAtBottom.addEventListener('input', function () {
+        demoConfig.gradeButtonsAtBottom = gradeButtonsAtBottom.value as boolean;
+        updatePopup();
+    });
+    const shorterButtonNamesSetting = nonNull(document.querySelector<SettingElement>('[name="useShorterButtonNames"]'));
+    shorterButtonNamesSetting.addEventListener('input', function () {
+        demoConfig.useShorterButtonNames = shorterButtonNamesSetting.value as boolean;
+        updatePopup();
+    });
 
     const saveButton = nonNull(document.querySelector('input[type=submit]'));
     saveButton.addEventListener('click', async event => {
