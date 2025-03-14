@@ -1,6 +1,6 @@
 {
-    "name": "jpd-breader-y",
-    "version": "1.0",
+    "name": "jpd-breader+y",
+    "version": "1.2",
     "scripts": {
         "preinstall": "git config core.hooksPath ./scripts/git_hooks",
         "format": "ts-node --esm scripts/format.ts",
