@@ -269,12 +269,12 @@ const messageHandlers: {
             await review(request.vid, request.sid, request.review);
         }
 
-        postResponse(port, request, null);
-        await broadcastNewWordState(request.vid, request.sid);
-
         incrementOccurrence(request.vid, request.sid, Number(config.miningDeckId));
         const occurence = await getOccurrence(request.vid, request.sid, config.occurDeckIds);
         if (occurence) broadcast({ type: 'updateOccurrence', words: [[request.vid, request.sid, occurence]] });
+
+        postResponse(port, request, null);
+        await broadcastNewWordState(request.vid, request.sid);
     },
 };
 
