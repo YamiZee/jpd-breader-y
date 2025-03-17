@@ -1,3 +1,22 @@
+## JPDB Reader Gamma Edition
+This fork introduces many small features and quality of life polishes, but it's primary purpose is to give structure to how you mine.
+### Features:
+- The definition of a "**new**" word is a word that you've seen before, but haven't begun reviewing yet. Words from built in decks should **not** be "new", as you've never seen them before. Now you can select your mining decks, and only those decks will have "new" words in them. In other words, only words you've mined will show as *blue*, while unseen cards will show as *purple*. (Also, if you mine cards with this or the mpv plugin, your new words may have sentences that you don't want to replace. With this you know which words those are.)
+- Occurs, or the frequency of a word within some or all of your decks are now displayed inside the popup in addition to the total frequency in the database. I see two usecases for this.
+  1. You set occurs to a built in deck for the content you're mining so that when you encounter a word, you know how frequently it will show up. Frequent words should be added to your review stack.
+  2. You set occurs to your mining decks. When you "add" a new card, it's occur value will increase. Maybe you only want to begin reviewing a word once you've seen it 3 times. Now you can track that.
+- Styling frequent or infrequent words. Let's say you're a beginner and only want to focus on the top 2k words. You can make all of them show up as *green*. Or maybe you'd instead like to *gray* out all words that are less frequent.
+- Lots of quality of life features added:
+  1. Clicking on words will show the popup. In the base plugin this would disable selecting text or clicking on text fields but this is not an issue in this edition.
+  2. Close popup when mouse leaves the word or the popup. Especially useful if you enjoy auto showing the popup on hover.
+  3. Other stuff like mokuro compatibility or the removal of the weird "parse selection" button from the top of the screen. 
+### Styling:
+A nice default styling. Never-forget, known, learned, and blacklisted words all show up as the sites original coloring (and size). Failed and due will show *reddish*, new will show *blue*, unseen as *purple*, and frequent words *green*. The colors are meant for white text (texthooker / subtitles) but are visible for black text too. The popup has been styled based on Togeffet's plus-alpha fork, but you can delete the default css if you want to restore the base aesthetic. Additionally, the settings preview for the popup finally updates properly.
+### Final notes:
+This extension is manifest v2. If you'd rather use a v3 extension, then you could use Kagu-chans [anki jpdb reader](https://github.com/Kagu-chan/anki-jpdb.reader/tree/dev). I've considered moving my features there, but as the code bases are quite different, I've decided against it for now. 
+Another interesting fork is Togeffets [jpdb reader plus alpha](https://github.com/Togeffet/jpd-breader-plus-alpha) which adds a 2d reviewing section into the jpdb website itself. I liked some of it's styling choices and features so I ported them onto mine.
+
+
 # JPDB Web Reader Extension
 
 A browser extension that parses any text in your browser using JPDB, and allows you to mine new vocabulary from any page!
